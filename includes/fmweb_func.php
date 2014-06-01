@@ -460,6 +460,87 @@ function old_write_footer_html() {
    echo "</html>\n";
 }
 
+function write_test_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
+   echo "<form action=\"read_start.php\" method=\"post\">\n";
+   printf("<INPUT type=\"hidden\" name=\"testKode\" value=\"%s\">\n", $TestID);
+   printf("<INPUT type=\"hidden\" name=\"CorrectAnswers\" value=\"%s\">\n", $CorrectAnswers);
+   printf("<INPUT type=\"hidden\" name=\"PageID\" value=\"%s\">\n", $CurrentTestPage);
+
+   echo "        <!-- ydre ramme -->\n";
+   echo "    <div id=\"frame1\"><!-- ydre ramme -->\n";
+
+   echo "        <!-- Logo banner i toppen -->\n";
+   echo "    <div id=\"logo\"></div>\n";
+
+   echo "        <!-- Ramme rundt tekstindhold -->\n";
+   echo "    <div id=\"frame2\"><p></p></div>\n";
+
+   echo "        <!-- Indholdstekst/ den forklarende tekst -->\n";
+   printf("<div id=\"frame2a\"><p><span style=\"font-size:1.4em; color: #9F000F; font-style:italic \">%s\n", $ExplainText);
+   echo "        </span></p></div>\n";
+
+   echo "        <!-- Billede - box -->\n";
+   echo "    <div id=\"frame3\">\n";
+   printf("<img src=\"http://www.danskerne.se/FMWeb/images/%s\"\n>", $PictName);
+   echo "    </div>\n";
+
+   echo "        <!-- TEXT - Næste/ box -->\n";
+   echo "    <div id=\"frame3a\">\n";
+   echo "        <a href=\"#\" class=\"css_btn_class\"><span style=\"font-size:1.2em; color: #9F000F; font-style:italic \">\n";
+   echo "<INPUT type=\"image\" id=\"myButton\" src=\"..\/green.png\" width=\"50\" height=\"50\">\n";
+   echo "</span></a></div>\n";
+
+   echo "        <!-- Overskrift /Spørgsmål -->                \n";
+   printf("<div id=\"frame4\"><span style=\"font-size:1.4em; color: #9F000F; font-style:italic \">\n";%s\n", $QuestionText);
+   echo "</span></div>\n";
+
+   echo "        <!-- Spørgsmål 1 -->\n";
+   echo "    <div id=\"frame4a\">\n";
+   echo htmlentities($Q1Text);
+   echo "</div>\n";
+
+   echo "        <!-- Spørgsmål 2 -->\n";
+   echo "    <div id=\"frame4b\">\n";
+   echo htmlentities($Q2Text);
+   echo "</div>\n";
+
+   echo "        <!-- Spørgsmål 3 -->\n";
+   echo "    <div id=\"frame4c\">\n";
+   echo htmlentities($Q3Text);
+   echo "</div>\n";
+
+   echo "    <section title=\".squaredFour\">\n";
+   echo "    <!-- Checkbox 1 -->\n";
+   echo "    <div class=\"squaredFour\">\n";
+   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour\" name=\"check\" checked />\n";
+   echo "      <label for=\"squaredFour\"></label>\n";
+   echo "    </div>\n";
+   echo "    <!-- end Checkbox 1 -->\n";
+   echo "  </section>\n";
+
+   echo "     <section title=\".squaredFour1\">\n";
+   echo "    <!-- Checkbox 2 -->\n";
+   echo "    <div class=\"squaredFour1\">\n";
+   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour1\" name=\"check\" checked />\n";
+   echo "      <label for=\"squaredFour1\"></label>\n";
+   echo "    </div>\n";
+   echo "    <!-- end Checkbox 2 -->\n";
+   echo "  </section>\n";
+
+   echo " <section title=\".squaredFour2\">\n";
+   echo "    <!-- Checkbox 3 -->\n";
+   echo "    <div class=\"squaredFour2\">\n";
+   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour2\" name=\"check\" checked />\n";
+   echo "      <label for=\"squaredFour2\"></label>\n";
+   echo "    </div>\n";
+   echo "    <!-- end Checkbox 3 -->\n";
+   echo "  </section>\n";
+   echo "</p>\n";
+   echo "</form>\n";
+}
+
+
+
 function write_edit_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
    echo "<form action=\"writetest.php\" method=\"post\">\n";
    printf("<INPUT type=\"hidden\" name=\"TestID\" value=\"%s\">\n", $TestID);
