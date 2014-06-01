@@ -1,6 +1,6 @@
 <?php
-include_once 'db_connect.php';
-include_once 'fmweb_func.php';
+include_once 'includes/db_connect.php';
+include_once 'includes/fmweb_func.php';
 
 sec_session_start();
 ?>
