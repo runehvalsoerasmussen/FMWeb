@@ -2,6 +2,9 @@
 include_once 'fmweb_config.php';
 
 function sec_session_start() {
+}
+
+function normal_sec_session_start() {
     $session_name = 'sec_session_id';   // Set a custom session name
     $secure = SECURE;
     // This stops JavaScript being able to access the session id.
@@ -67,6 +70,7 @@ function login($email, $pwd, $mysqli) {
                               $pwd . $user_browser);
                     // Login successful - return the security level for this user, 0=login failed, 1=admin, 2=user
                     return $slvl;
+printf("<p>user_id=%s, username=%s, login_string=%s. password=%s.</p>\n", $_SESSION['user_id'], $_SESSION['username'], $_SESSION['login_string'], $password);
                 } else {
                     // Password is not correct
                     // We record this attempt in the database
@@ -114,7 +118,6 @@ function login_check($mysqli) {
     if (isset($_SESSION['user_id'],
               $_SESSION['username'],
               $_SESSION['login_string'])) {
-
         $user_id = $_SESSION['user_id'];
         $login_string = $_SESSION['login_string'];
         $username = $_SESSION['username'];
@@ -135,7 +138,6 @@ function login_check($mysqli) {
                 $stmt->bind_result($pwd);
                 $stmt->fetch();
                 $login_check = hash('sha512', $pwd . $user_browser);
-
                 if ($login_check == $login_string) {
                     // Logged In!!!!
                     return true;
@@ -191,93 +193,6 @@ function esc_url($url) {
     } else {
         return $url;
     }
-}
-
-function write_static_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
-   echo "<form action=\"readnext.php\" method=\"post\">\n";
-   if ($CurrentTestPage < $TotalPages) {
-      printf("<INPUT type=\"hidden\" name=\"PageID\" value=\"%s\">\n", $CurrentTestPage+1);
-   } else {
-      if ($CurrentTestPage == $TotalPages) {
-         printf("<INPUT type=\"hidden\" name=\"PageID\" value=\"%s\">\n", 0);
-      }
-   }
-   printf("<INPUT type=\"hidden\" name=\"TestID\" value=\"%s\">\n", $TestID);
-   printf("<p>Side %s af totalt %s\n", $CurrentTestPage, $TotalPages);
-
-
-   echo "        <!-- ydre ramme -->\n";
-   echo "    <div id=\"frame1\"><!-- ydre ramme -->\n";
-
-   echo "        <!-- Logo banner i toppen -->\n";
-   echo "    <div id=\"logo\"></div>\n";
-
-   echo "        <!-- Ramme rundt tekstindhold -->\n";
-   echo "    <div id=\"frame2\"><p></p></div>\n";
-
-   echo "        <!-- Indholdstekst/ den forklarende tekst -->\n";
-   printf("    <div id=\"frame2a\"><p><span style=\"font-size:1.4em; color: #9F000F; font-style:italic \">%s\n", $ExplainText);
-
-   echo "        </span></p></div>\n";
-
-   echo "        <!-- Billede - box -->\n";
-   echo "    <div id=\"frame3\">\n";
-   printf("<img src=\"http://www.danskerne.se/FMWeb/images/%s\"\n>", $PictName);
-   echo "    </div>\n";
-
-   echo "        <!-- TEXT - Næste/ box -->\n";
-   echo "    <div id=\"frame3a\">\n";
-   echo "        <a href=\"#\" class=\"css_btn_class\"><span style=\"font-size:1.2em; color: #9F000F; font-style:italic \">\n";
-   echo "<INPUT type=\"image\" id=\"myButton\" src=\"..\/green.png\" width=\"50\" height=\"50\">\n";
-   echo "</span></a></div>\n";
-
-   echo "        <!-- Overskrift /Spørgsmål -->                \n";
-   printf("    <div id=\"frame4\"><span style=\"font-size:1.4em; color: #9F000F; font-style:italic \">%s\n", $QuestionText);
-   echo "</span></div>\n";
-
-   echo "        <!-- Spørgsmål 1 -->\n";
-   echo "    <div id=\"frame4a\">\n";
-   echo htmlentities($Q1Text);
-   echo "</div>\n";
-
-   echo "        <!-- Spørgsmål 2 -->\n";
-   echo "    <div id=\"frame4b\">\n";
-   echo htmlentities($Q2Text);
-   echo "</div>\n";
-
-   echo "        <!-- Spørgsmål 3 -->\n";
-   echo "    <div id=\"frame4c\">\n";
-   echo htmlentities($Q3Text);
-   echo "</div>\n";
-
-   echo "    <section title=\".squaredFour\">\n";
-   echo "    <!-- Checkbox 1 -->\n";
-   echo "    <div class=\"squaredFour\">\n";
-   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour\" name=\"check\" checked />\n";
-   echo "      <label for=\"squaredFour\"></label>\n";
-   echo "    </div>\n";
-   echo "    <!-- end Checkbox 1 -->\n";
-   echo "  </section>\n";
-
-   echo "     <section title=\".squaredFour1\">\n";
-   echo "    <!-- Checkbox 2 -->\n";
-   echo "    <div class=\"squaredFour1\">\n";
-   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour1\" name=\"check\" checked />\n";
-   echo "      <label for=\"squaredFour1\"></label>\n";
-   echo "    </div>\n";
-   echo "    <!-- end Checkbox 2 -->\n";
-   echo "  </section>\n";
-
-   echo " <section title=\".squaredFour2\">\n";
-   echo "    <!-- Checkbox 3 -->\n";
-   echo "    <div class=\"squaredFour2\">\n";
-   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour2\" name=\"check\" checked />\n";
-   echo "      <label for=\"squaredFour2\"></label>\n";
-   echo "    </div>\n";
-   echo "    <!-- end Checkbox 3 -->\n";
-   echo "  </section>\n";
-   echo "</p>\n";
-   echo "</form>\n";
 }
 
 function write_static_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
@@ -460,10 +375,11 @@ function old_write_footer_html() {
    echo "</html>\n";
 }
 
-function write_test_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
+function write_test_form($CurrentTestPage, $TotalPages, $TokenID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
+   echo "<section id=\"container\">\n";
    echo "<form action=\"read_start.php\" method=\"post\">\n";
-   printf("<INPUT type=\"hidden\" name=\"testKode\" value=\"%s\">\n", $TestID);
-   printf("<INPUT type=\"hidden\" name=\"CorrectAnswers\" value=\"%s\">\n", $CorrectAnswers);
+   printf("<INPUT type=\"hidden\" name=\"testKode\" value=\"%s\">\n", $TokenID);
+   printf("<INPUT type=\"hidden\" name=\"TotalID\" value=\"%s\">\n", $TotalPages);
    printf("<INPUT type=\"hidden\" name=\"PageID\" value=\"%s\">\n", $CurrentTestPage);
 
    echo "        <!-- ydre ramme -->\n";
@@ -487,11 +403,11 @@ function write_test_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $
    echo "        <!-- TEXT - Næste/ box -->\n";
    echo "    <div id=\"frame3a\">\n";
    echo "        <a href=\"#\" class=\"css_btn_class\"><span style=\"font-size:1.2em; color: #9F000F; font-style:italic \">\n";
-   echo "<INPUT type=\"image\" id=\"myButton\" src=\"..\/green.png\" width=\"50\" height=\"50\">\n";
+//   echo "<INPUT type=\"image\" id=\"myButton\" src=\"..\/green.png\" width=\"50\" height=\"50\">\n";
    echo "</span></a></div>\n";
 
    echo "        <!-- Overskrift /Spørgsmål -->                \n";
-   printf("<div id=\"frame4\"><span style=\"font-size:1.4em; color: #9F000F; font-style:italic \">\n";%s\n", $QuestionText);
+   printf("<div id=\"frame4\"><span style=\"font-size:1.4em; color: #9F000F; font-style:italic \">%s\n", $QuestionText);
    echo "</span></div>\n";
 
    echo "        <!-- Spørgsmål 1 -->\n";
@@ -512,8 +428,14 @@ function write_test_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $
    echo "    <section title=\".squaredFour\">\n";
    echo "    <!-- Checkbox 1 -->\n";
    echo "    <div class=\"squaredFour\">\n";
-   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour\" name=\"check\" checked />\n";
-   echo "      <label for=\"squaredFour\"></label>\n";
+   echo "<input type=\"radio\" onclick=\"enableNext()\" name=\"CorrectAnswers\"";
+   if ($QSvar == 1){
+      printf("value=\"%s\">\n", ($CorrectAnswers + 1));
+   } else {
+      printf("value=\"%s\">\n", $CorrectAnswers);
+   }
+//   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour\" name=\"check\" checked />\n";
+//   echo "      <label for=\"squaredFour\"></label>\n";
    echo "    </div>\n";
    echo "    <!-- end Checkbox 1 -->\n";
    echo "  </section>\n";
@@ -521,8 +443,14 @@ function write_test_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $
    echo "     <section title=\".squaredFour1\">\n";
    echo "    <!-- Checkbox 2 -->\n";
    echo "    <div class=\"squaredFour1\">\n";
-   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour1\" name=\"check\" checked />\n";
-   echo "      <label for=\"squaredFour1\"></label>\n";
+   echo "<input type=\"radio\" onclick=\"enableNext()\" name=\"CorrectAnswers\"";
+   if ($QSvar == 2){
+      printf("value=\"%s\">\n", ($CorrectAnswers + 1));
+   } else {
+      printf("value=\"%s\">\n", $CorrectAnswers);
+   }
+//   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour1\" name=\"check\" checked />\n";
+//   echo "      <label for=\"squaredFour1\"></label>\n";
    echo "    </div>\n";
    echo "    <!-- end Checkbox 2 -->\n";
    echo "  </section>\n";
@@ -530,16 +458,19 @@ function write_test_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $
    echo " <section title=\".squaredFour2\">\n";
    echo "    <!-- Checkbox 3 -->\n";
    echo "    <div class=\"squaredFour2\">\n";
-   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour2\" name=\"check\" checked />\n";
-   echo "      <label for=\"squaredFour2\"></label>\n";
+   echo "<input type=\"radio\" onclick=\"enableNext()\" name=\"CorrectAnswers\"";
+   if ($QSvar == 3){
+      printf("value=\"%s\">\n", ($CorrectAnswers + 1));
+   } else {
+      printf("value=\"%s\">\n", $CorrectAnswers);
+   }
+//   echo "      <input type=\"checkbox\" value=\"None\" id=\"squaredFour2\" name=\"check\" checked />\n";
+//   echo "      <label for=\"squaredFour2\"></label>\n";
    echo "    </div>\n";
    echo "    <!-- end Checkbox 3 -->\n";
    echo "  </section>\n";
-   echo "</p>\n";
    echo "</form>\n";
 }
-
-
 
 function write_edit_form($CurrentTestPage, $TotalPages, $TestID, $ExplainText, $PictName, $QuestionText, $QSvar, $CorrectAnswers, $Q1Text, $Q2Text, $Q3Text) {
    echo "<form action=\"writetest.php\" method=\"post\">\n";
