@@ -46,7 +46,7 @@ if (isset($_POST["testKode"],
    $Resultat="";
    $foundTest = 0;
    $idDB = 0;
-   $password = "D9EHTMBee5Y6BTQtTbZJ5TtL";
+   $password = "";
    try {
       $db = new PDO('mysql:host=danskerne.se.mysql;dbname=danskerne_se', 'danskerne_se', $password);
       $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
